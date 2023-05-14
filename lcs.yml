@@ -1,0 +1,11 @@
+name: lcs
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - jupyterlab=3.4.0
+  - pandas=1.4.2
+  - python-wget=3.2
+  - scikit-learn=1.0.2
+  - seaborn=0.12.1
+prefix: \anaconda3\envs\lcs
