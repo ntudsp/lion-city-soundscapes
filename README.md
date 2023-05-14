@@ -37,7 +37,7 @@ Activate the conda environment by entering the following line into a terminal:
 
 To run the replication code and baseline models, as reported in our publication, you may enter the following line into a terminal (this opens a Jupyter Notebook in your default browser):
 
-    jupyter lab replication_code.ipynb
+    jupyter lab --notebook-dir . code/replication_code.ipynb
 
 In addition, if you want to download the audio and video files making up the dataset (which includes the 1-min excerpts of all raw audio and video recorded for all soundscapes, as well as the full-length recordings for S0001, S0002, and S0041), you may alternatively enter the following into a terminal (this will download ~210 GB of data from the Internet):
 
