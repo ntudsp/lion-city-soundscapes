@@ -1,264 +1,348 @@
-<a name="readme-top"></a>
+# lion-city-soundscapes
 
-<!-- START OF DOCUMENT -->
+This repository stores code to download the files in the Lion City Soundscapes (LCS) dataset available at <a href="https://doi.org/10.21979/N9/AVHSBX">https://doi.org/10.21979/N9/AVHSBX</a>, as well as replication code for the following publication related to the dataset:
 
-# lion-city-soundscapes-visualisation
+> Kenneth Ooi, Hao-Weng Lin, Jessie Goh, Zhen-Ting Ong, Trevor Wong, Karn Watcharasupat, Bhan Lam, Woon-Seng Gan, "Lion City Soundscapes (LCS): Recording and Validation of Characteristic Soundscapes of Singapore", in _29th International Congress on Sound and Vibration, ICSV 2023_, Prague, Czech Republic.
 
-This repository stores the code to build a Django web application for the interactive <a href="https://leafletjs.com">Leaflet</a> map described in the following publication:
+The LCS dataset contains audio-visual recordings made at the 62 locations identified by the <a href="https://doi.org/10.3390/su14127485">Singapore Soundscape Site Selection Survey</a>, where each soundscape is given an ID in the form `S####`, where `####` ranges from `0001` to `0062`. The set of audio-visual recordings for each location comprises the following, as both "full-length" recordings (ranging from 9-38 minutes in length) and 1-minute excerpts of the "full-length" recordings:
 
-> Kenneth Ooi, Jessie Goh, Hao-Weng Lin, Zhen-Ting Ong, Trevor Wong, Karn Watcharasupat, Bhan Lam, Woon-Seng Gan, "Lion City Soundscapes (LCS): Recording and Validation of Characteristic Soundscapes of Singapore", in _29th International Congress on Sound and Vibration, ICSV 2023_, Prague, Czech Republic, 2023.
+- 19-channel WAV file recorded using a ZYLIA ZM-1 3rd-order Ambisonic microphone
+- 2-channel stereo WAV file generated from the 19-channel WAV file upon recording using a ZYLIA ZR-1 Portable Recorder
+- 3-channel HDF file recorded using a B&K Type 4101-B binaural microphone (first two channels) and GRAS 146AE Free-field Microphone (last channel) connected to a HEAD Acoustics SQobold Data Acquisition System
+- 2-channel WAV file recorded using the binaural microphone, as generated from the first two channels of the HDF file
+- 1-channel WAV file recorded using the GRAS 146AE Free-field Microphone, as generated from the last channel of the HDF file
+- 360-degree video file (in spherical format) recorded using an Insta360 One R camera and onboard microphone
 
-A (temporarily working) deployed example of the interactive map can be accessed at http://18.136.105.85/map/.
-
-# Related resources
-
-- The publication will be accessible at https://hdl.handle.net/10356/168104 after ICSV 2023 ends on July 13, 2023.
-- For the version of the project repository submitted for Jessie's Final Year Project, please refer to https://github.com/nemopotatoes/Lion-City-Soundscapes-Visualisation.
-- The Lion City Soundscapes (LCS) dataset itself is accessible at https://doi.org/10.21979/N9/AVHSBX.
-- The replication code for the statistical analysis and excerption methodology for the LCS dataset is accessible at https://github.com/ntudsp/lion-city-soundscapes.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+Further information on the audio and video files in the dataset itself is available at <a href="https://doi.org/10.21979/N9/AVHSBX">https://doi.org/10.21979/N9/AVHSBX</a>.
 
 # Getting started
 
-## Step 1: Downloading this repository
+Firstly, clone this repository by manually downloading it from https://github.com/ntudsp/lion-city-soundscapes, or enter the following line from a terminal (you need to have <a href="https://github.com/git-guides/install-git">git</a> installed first, of course):
 
-Firstly, clone this repository by manually downloading it from https://github.com/ntudsp/lion-city-soundscapes-visualisation, or enter the following line from a terminal (you need to have <a href="https://github.com/git-guides/install-git">git</a> installed first, of course):
-
-  ```sh
-  git clone https://github.com/ntudsp/lion-city-soundscapes-visualisation
-  ```
+    git clone https://github.com/ntudsp/lion-city-soundscapes
 
 You may then navigate to the downloaded folder with 
 
-  ```sh
-  cd lion-city-soundscapes-visualisation
-  ```
-	
-## Step 2: Setting up the project environment
+    cd lion-city-soundscapes
 
-Next, you will need to set up the project environment to run the application. We provide three alternatives in this section, and you may choose whichever is the most convenient (but not more than one at a time, of course).
+If you are using <a href="https://docs.conda.io/en/latest/">conda</a> as your package manager, you may enter the following line into a terminal to install the required packages into a conda environment (or you may install them manually using the requirements stated in `lcs.yml`):
 
-### Alternative A: With conda installation commands
-<a name="alt-A"></a>
+    conda env create -f lcs.yml
 
-If you are using <a href="https://www.anaconda.com/download">conda</a>, you may run the following commands in sequence to create the environment and install the necessary packages (note that the `-n` option specifies the name of the environment to be created):
+Activate the conda environment by entering the following line into a terminal:
 
-  ```sh
-  conda create -n lcs-vis
-  conda activate lcs-vis
-  conda install django
-  conda install python-dotenv
-  ```
-	
-For reference, we did this on conda version 23.3.1 (as of 28 June 2023). The above commands installed Django version 4.1 and python-dotenv version 0.21.0.
+    conda activate lcs
 
-### Alternative B: With conda environment file
-<a name="alt-B"></a> 
+(If you are running the code on a computer with macOS installed, and the above commands fail, try `conda env create -f lcs-mac.yml` and `conda activate lcs-mac` instead.)
 
-If you are using <a href="https://www.anaconda.com/download">conda</a>, you may also run the following commands to create and activate the environment from the `.yml` file in this repository (note that the `-f` option specifies the file containing the environment specifications and the `-n` option specifies the name of the environment to be created):
+To run the replication code and baseline models, as reported in our publication, you may enter the following line into a terminal (this opens a Jupyter Notebook in your default browser):
 
-  ```sh
-  conda env create -f lcs-vis.yml -n lcs-vis
-  conda activate lcs-vis
-  ```
+    jupyter lab --notebook-dir . code/replication_code.ipynb
 
-### Alternative C: With `venv`
-<a name="alt-C"></a>
+In addition, if you want to download the audio and video files making up the dataset (which includes the 1-min excerpts of all raw audio and video recorded for all soundscapes, as well as the full-length recordings for S0001, S0002, and S0041), you may alternatively enter the following into a terminal (this will download ~210 GB of data from the Internet):
 
-First, ensure that <a href="https://www.python.org/downloads/">Python</a> and pip (a Python package manager) are installed on your system. Our system had Python version 3.10.9 and pip version 22.3.1 installed. You may check the versions installed on your system with the following commands:
+    cd ./code
+    python download.py manifest.csv
 
-  ```sh
-  python --version
-  pip --version
-  ```
-   
-Then, create a virtual environment named `lcs-vis` using `venv` (note that the `-m` option runs library modules as scripts):
-
-  ```sh
-  python -m venv lcs-vis
-  ```
-   
-Then, go to the virtual environment's directory and activate it:
-
-  ```sh
-  cd lcs-vis\Scripts
-  activate
-  ```
- 
-Then, go back to the root directory and install all other requirements for the application (note that the `-r` option tells pip to install from the specified requirements file):
-
-  ```sh
-  cd ..\..
-  pip install -r requirements.txt
-  ```
-   
-## Step 3: Running the web application
-
-Once the project environment has been set up correctly, the following command will start the (local) server hosting the web application:
-
-  ```sh
-  python manage.py runserver
-  ```
-	
-Alternatively, in case your system doesn't load the static files (e.g., CSS, CSV files) for the application automatically, you may want to run this instead (this will create a new folder called `static` in the root folder of this repository that django may try to look for, depending on your system settings):
-
-  ```sh
-  python manage.py collectstatic
-  python manage.py runserver
-  ```
-	
-The application will then be accessible at http://127.0.0.1:8000/ (you may enter this address into any web browser, such as Firefox or Chrome, to view it). To stop the server, you may press `Ctrl`+`C` on your keyboard in the same terminal that was used to start it.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
+If all files have downloaded successfully, your directory structure should match <a href="#dir_after_download">this</a>. The replication code does not require a prior download of any of the audio or video files from the LCS dataset to work.
+    
 # Directory structure
 
-## This repository (after cloning with `git` and/or after running <a href="#alt-A">Alternative A</a> or <a href="#alt-B">Alternative B</a>)
+## This repository
 
     .
-    ├── lioncitysoundscapes # Application folder containing HTML files, webpage format, and current app URL. Note that django projects may each contain multiple apps, each with their own folder, but our project only has one app (lioncitysoundscapes), thus there is only one folder here.
-	│   ├── ...             
-    │   ├── urls.py         # Defines paths to webpages themselves.
-	│   └── views.py        # Defines functions to make HTTP requests to handle page loading.
+    ├── code                          # Code used to process the raw data and output the results.
+	│   ├── download.py              
+    │   ├── download_utils.py        
+	│   ├── lcs_points.py            
+    │   ├── lcs_utils.py             
+	│   ├── manifest.csv             
+	│   └── replication_code.ipynb   
 	│                                
-	├── staticfiles         # The folder that we configured ("forced") django to try to look for to load the application (cf. Lines 132-134 in .\visualisation\settings.py). However, depending on your own system settings, django may try to look for a folder named `static` instead (cf. Line 129 in .\visualisation\settings.py), in which case the `python manage.py collectstatic` (as described in Step 3) needs to be run before starting the server.
-	│   ├── css
-    │   ├── csv
-    │   ├── images     
-	│   └── js
+	├── figures                       # Folder containing all reference figures used in the Jupyter Notebook (29 files; all png)
+	│   ├── all_soundscapes.png
+    │   ├── ...     
+	│   └── uniform_circle_points.png 
 	│
-    ├── visualisation       # Configuration files for the application                        
-	├── ...
-	├── README.md           # This file.
-	├── lcs-vis.yml         # The Anaconda environment containing required packages to build the application using Alternative B.
-	├── manage.py           # Python file to run and manage the (local) application server
-    └── requirements.txt    # The requirements file for setting up the project environment using Alternative C
-	
-## This repository (after running <a href="#alt-C">Alternative C</a>)
+    ├── results                       # Folder to store reference results & results generated by the Jupyter Notebook
+	│   └── seed-12-epoch-79-ref.csv
+	│                                
+	├── CITATION.cff                  # Citation information for the dataset in plain text.
+	├── README.md                     # This file.
+	├── lcs.yml                       # The Anaconda environment containing required packages to run all the code in ./code (for Windows and Ubuntu)
+	├── lcs-mac.yml                   # The Anaconda environment containing required packages to run all the code in ./code (for macOS)
+	├── metadata.csv
+    └── predictions.csv
+
+## After running `python download.py manifest.csv` <a name="dir_after_download">
 
     .
-    ├── lcs-vis             # `venv` environment folder
-	│   ├── Include 
-    │   ├── Lib  
-    │   ├── Scripts
-	│   │   ├── activate    # Run in command line/terminal to activate virtual environment
-	│   │   └── ...
-	│   │	
-	│   └── pyenv.cfg
+    ├── code
+	│   ├── download.py
+    │   ├── download_utils.py
+	│   ├── lcs_points.py
+    │   ├── lcs_utils.py
+	│   ├── manifest.csv
+	│   └── replication_code.ipynb
 	│
-    ├── lioncitysoundscapes
-	│   ├── ...             
-    │   ├── urls.py                   
-	│   └── views.py  
-	│                                
-	├── staticfiles
-	│   ├── css
-    │   ├── csv
-    │   ├── images     
-	│   └── js
+    ├── data
+	│   ├── S0001
+	│   │   ├── S0001_1min_Insta360.mp4          # 4096 x 2048 resolution, min. 40 mbps @ 29.97 fps, audio min. 128 kbps, 2 channels, 16-bit representation, 48000 Hz sampling frequency
+    │   │   ├── S0001_1min_SQobold_all.hdf       # 3 channels: Bin_L, Bin_R, GRAS_146AE
+	│   │   ├── S0001_1min_SQobold_bin.wav       # 2 channels, 24-bit representation, 48000 Hz sampling frequency
+    │   │   ├── S0001_1min_SQobold_spl.wav       # 1 channel, 24-bit representation, 48000 Hz sampling frequency
+	│   │   ├── S0001_1min_Zylia_02ch.wav        # 2 channels, 24-bit representation, 48000 Hz sampling frequency
+	│   │   ├── S0001_1min_Zylia_19ch.wav        # 19 channels, 24-bit representation, 48000 Hz sampling frequency
+	│   │   ├── S0001_full_Insta360.mp4          # 4096 x 2048 resolution, min. 40 mbps @ 29.97 fps, audio min. 128 kbps, 2 channels, 16-bit representation, 48000 Hz sampling frequency
+    │   │   ├── S0001_full_SQobold_all.hdf       # 3 channels: Bin_L, Bin_R, GRAS_146AE
+	│   │   ├── S0001_full_SQobold_bin.wav       # 2 channels, 24-bit representation, 48000 Hz sampling frequency
+    │   │   ├── S0001_full_SQobold_spl.wav       # 1 channel, 24-bit representation, 48000 Hz sampling frequency
+	│   │   ├── S0001_full_Zylia_02ch.wav        # 2 channels, 24-bit representation, 48000 Hz sampling frequency
+	│   │   └── S0001_full_Zylia_19ch_part01.wav # 19 channels, 24-bit representation, 48000 Hz sampling frequency. Other soundscapes may have more parts
+	│   │
+    │   ├── S####
+    │   │   └── ...
+	│   │
+	│   └── S0062
+	│       ├── S0062_1min_Insta360.mp4
+    │       ├── S0062_1min_SQobold_all.hdf
+	│       ├── S0062_1min_SQobold_bin.wav
+    │       ├── S0062_1min_SQobold_spl.wav
+	│       ├── S0062_1min_Zylia_02ch.wav
+	│       ├── S0062_1min_Zylia_19ch.wav
+    │       ├── S0062_full_SQobold_all.hdf
+	│       ├── S0062_full_SQobold_bin.wav
+    │       ├── S0062_full_SQobold_spl.wav
+	│       └── S0062_full_Zylia_02ch.wav
 	│
-    ├── visualisation                               
-	├── ...
+	├── figures                       # Folder containing all reference figures used in the Jupyter Notebook (29 files; all png)
+	│   ├── all_soundscapes.png
+    │   ├── ...     
+	│   └── uniform_circle_points.png 
+	│
+    ├── results                       # Folder to store reference results & results generated by the Jupyter Notebook
+	│   └── seed-12-epoch-79-ref.csv
+	│
+	├── CITATION.cff
 	├── README.md
-	├── lcs-vis.yml
-	├── manage.py
-    └── requirements.txt
+	├── lcs.yml
+	├── lcs-mac.yml
+	├── metadata.csv
+    └── predictions.csv
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+# Metadata files
 
-# Basic customisation
+## `metadata.csv`
 
-Here, we outline some basic methods to customise the map layout based on the code in this repository, if you would like to repurpose it for your own context. If the project server (i.e., the one at http://127.0.0.1:8000/) is running on your browser while you are making the changes, you may need to force a reload of the static files and cache on your browser to make the application reflect those changes in your browser (on Firefox and Chrome, this can be performed with the shortcut `Ctrl`+`Shift`+`R`).
-
-## Map layer
-
-For this project, we use the <a href="https://www.onemap.gov.sg/">OneMap API</a>, which generates a detailed map of Singapore, but is limited to Singapore only. If you would like to show other regions of the world, you may want to consider using the <a href="https://www.openstreetmap.org">OpenStreetMap API</a>, which covers the entire world.
-
-This may be done by changing the tile provider in `.\staticfiles\js\map.js` to the one for OpenStreetMap, and the corresponding attribution statement. In addition, we also recommend a change in the min/max zoom levels, maximum bounds of the map, and setting of the `noWrap` property to `true` to maintain a relatively "nice" view of the larger world map. Specifically, this may done by modifying Lines 121-125 in `.\staticfiles\js\map.js` from
-
-  ```JavaScript
-  121 var basemap = L.tileLayer('https://maps-{s}.onemap.sg/v3/Grey/{z}/{x}/{y}.png', {
-  122     detectRetina: true,
-  123     maxZoom: 20,
-  124     minZoom: 11,
-  125     attribution: '<a href="https://www.onemap.gov.sg/home/">OneMap</a> | Map data &copy; contributors, <a href="http://SLA.gov.sg">Singapore Land Authority</a>',
-  ...
-  ...
-  135 map.setMaxBounds([[1.50073, 104.1147], [1.16, 103.602]]);
-  ```
-  
-to
-
-  ```JavaScript
-  121 var basemap = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  122     detectRetina: true,
-  123     maxZoom: 20,
-  124     minZoom: 2,
-  125     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-  126     noWrap: true,
-  ...
-  ...
-  136 map.setMaxBounds([[-90, -180], [90, 180]]);
-  ```
-
-Note that `minZoom` controls the largest possible area of the world that can be seen by zooming out (the smaller the number, the larger the area that can be seen at once). The `setMaxBounds` method defines the top right and bottom left coordinates of the rectangle defining the maximum boundary of the map, i.e., beyond which the map will snap back to the original position.
-
-## Initial position & zoom level
-
-Currently, the map is configured to initially show the entirety of Singapore. However, you may wish to change this by modifying the starting latitude (1.350270), longitude (103.829959), and zoom level (12) of `.\staticfiles\js\map.js` at Line 4:
-
-  ```JavaScript
-  002 var map = L.map('mapdiv', {
-  003     zoomControl: false                  // remove top left zoom controls
-  004 }).setView([1.350270, 103.829959],12);  // lat and long coordinates + initial zoom
-  ```
-
-## Adding markers
-
-The markers on the map are dynamically added to the map based on the information provided in the CSV file at `.\staticfiles\csv\locations.csv`. Each row in the CSV file will correspond to one marker position on the interactive map, so you may add or remove rows as necessary if you wish to show a different set of markers for your use case. The column headers with their meanings in the context of our visualisation are as follows:
-
-- `Title` : strings
+- `lcs_id` : unique strings
+  - The ID of the soundscape in the LCS dataset. Each ID corresponds to a unique soundscape.
+- `lcs_description` : strings
   - A brief description of the actual location where the soundscape was recorded for the LCS dataset, which we refer to as the "recording location".
   - This may differ from the exact location identified by the <a href="https://doi.org/10.3390/su14127485">Singapore Soundscape Site Selection Survey</a> (S5 study), which we refer to as the "S5 location". This is due to the fact that the S5 location may be physically or publicly inaccessible (e.g., on water).
-- `Latitude` : floating point numbers
-  - The latitude of the recording location (i.e., the actual location where the soundscape was recorded for the LCS dataset).
-- `Longitude` : floating point numbers
-  - The longitude of the recording location (i.e., the actual location where the soundscape was recorded for the LCS dataset).
-- `Type` : strings in {"F&E", "C&R", "C&T", "B&L"}
+- `s5_type` : strings in {"F&E", "C&R", "C&T", "B&L"}
   - The perceptual quadrant in which the soundscape at the S5 location was classified using the modified $k$-means clustering algorithm in the <a href="https://doi.org/10.3390/su14127485">S5 study</a>.
-  - In the interactive map, these also control the colour of the marker assigned to the point on the map.
   - Keys:
-    - `F&E` : Full of life and exciting (orange)
-	- `C&R` : Chaotic and restless (red)
-	- `C&T` : Calm and tranquil (green)
-	- `B&L` : Boring and lifeless (black)
-- `vidEmbed` : strings
-  - The YouTube embed link to the 1-minute excerpt of the full-length recording from the Insta360 One R camera, used to load a preview of the location when the marker in the interactive map is clicked on.
-  - The link is of the form `https://www.youtube.com/embed/ABCDEFGHIJK`, where `ABCDEFGHIJK` is the 11-character string used to identify the video ID on YouTube.
-  - The recordings are 360-degree videos in spherical format corresponding to the files `S####_1min_Insta360.mp4` in the <a href="https://doi.org/10.21979/N9/AVHSBX">LCS dataset</a>.
-- `vidLink_oneMin` : strings
-  - The YouTube sharing link to the 1-minute excerpt of the full-length recording from the Insta360 One R camera, used to redirect the user to the same preview as `vidEmbed` hosted on YouTube.
-  - The link is of the form `https://youtu.be/ABCDEFGHIJK`, where `ABCDEFGHIJK` is the 11-character string used to identify the video ID on YouTube, and should match the 11-character string for `vidEmbed`.
-  - The recordings are 360-degree videos in spherical format corresponding to the files `S####_1min_Insta360.mp4` in the <a href="https://doi.org/10.21979/N9/AVHSBX">LCS dataset</a>.
-- `vidLink_full` : strings
-  - The YouTube sharing link to the full-length recording from the Insta360 One R camera, used to redirect the user to the full-length recording as hosted on YouTube.
-  - The link is of the form `https://youtu.be/ABCDEFGHIJK`, where `ABCDEFGHIJK` is the 11-character string used to identify the video ID on YouTube.
-  - The recordings are 360-degree videos in spherical format corresponding to the files `S####_full_Insta360.mp4` in the <a href="https://doi.org/10.21979/N9/AVHSBX">LCS dataset</a>.
+    - `F&E` :  Full of life and exciting
+	- `C&R`: Chaotic and restless
+	- `C&T` : Calm and tranquil
+	- `B&L` : Boring and lifeless
+- `s5_id` : positive integers in {0, 1, 2, ..., 17, 18}
+  - The index of the soundscape at the S5 location for that particular perceptual quadrant in the  <a href="https://doi.org/10.3390/su14127485">S5 study</a>.
+- `s5_latitude` : floating point numbers
+  - The latitude of the S5 location (i.e., the location identified in the <a href="https://doi.org/10.3390/su14127485">S5 study</a>).
+- `s5_longitude` : floating point numbers
+  - The longitude of the S5 location (i.e., the location identified in the <a href="https://doi.org/10.3390/su14127485">S5 study</a>).
+- `lcs_latitude` : floating point numbers
+  - The latitude of the recording location (i.e., the actual location where the soundscape was recorded for the LCS dataset).
+- `lcs_longitude` : floating point numbers
+  - The longitude of the recording location (i.e., the actual location where the soundscape was recorded for the LCS dataset).
+- `lcs_date` : strings
+  - The date on which the soundscape was recorded at the recording location for the LCS dataset, in `YYYYMMDD` format.
+  - All recordings were done from 20220916 to 20230111 (inclusive).
+- `lcs_time` : strings
+  - The time corresponding to the start of the full-length recording of the soundscape at the recording location, in 24-hour format.
+  - All recordings were started from 0909 to 1855 (inclusive).
+- `usable_length_bin_minutes` : integers
+  - The minutes place of the length of the full-length recording made at the recording location.
+  - For example, if the full-length recording was 26 minutes and 10.9 seconds long, the value here would be 26.
+- `usable_length_bin_seconds` : integers in {0, 1, 2, ..., 58, 59}
+  - The seconds place of the length of the full-length recording made at the recording location.
+  - For example, if the full-length recording was 26 minutes and 10.9 seconds long, the value here would be 10.
+- `usable_length_bin_frames_at_30fps` : integers in {0, 1, 2, ..., 28, 29}
+  - The frames place of the length of the full-length recording made at the recording location (assuming a frame rate of 30 frames per second).
+  - For example, if the full-length recording was 26 minutes and 10.9 seconds long, the value here would be 27.
+- `usable_length_all_minutes` : integers
+  - The minutes place of the time after the start of the full-length recording when the ZYLIA recording first desynchronises from the other recording devices.
+  - We found out when processing the audio-visual recordings that due to technical issues with the ZYLIA recorder, samples were intermittently dropped (for unknown durations and at random times) in the ZYLIA recordings for some locations. Hence, data beyond this timestamp should not be used if the ZYLIA recording needs to be synchronised with a recording from any other recording device (even though we have made all data available for archival purposes).
+  - For example, if the desynchronisation happened at 23 minutes and 1.4 seconds, the value here would be 25.
+- `usable_length_all_seconds` : integers in {0, 1, 2, ..., 58, 59}
+  - The seconds place of the time after the start of the full-length recording when the ZYLIA recording first desynchronises from the other recording devices.
+  - For example, if the full-length recording was 23 minutes and 1.4 seconds long, the value here would be 1.
+- `usable_length_all_frames_at_30fps` : integers in {0, 1, 2, ..., 28, 29}
+  - The frames place of the time after the start of the full-length recording when the ZYLIA recording first desynchronises from the other recording devices (assuming a frame rate of 30 frames per second).
+  - For example, if the length of the recording was 23 minutes and 1.4 seconds, the value here would be 12.
+- `onemin_offset_bin_minutes` : integers
+  - The minutes place of the time after the start of the full-length recording when the 1-minute excerpt was cropped.
+  - For example, if the 1-minute excerpt was cropped 14 minutes and 12.0 seconds after the start of the full-length recording, the value here would be 14.
+- `onemin_offset_bin_seconds` : integers in {0, 1, 2, ..., 58, 59}
+  - The seconds place of the time after the start of the full-length recording when the 1-minute excerpt was cropped.
+  - For example, if the 1-minute excerpt was cropped 14 minutes and 12.0 seconds after the start of the full-length recording, the value here would be 12.
+- `onemin_offset_bin_frames_at_30fps` : integers in {0, 1, 2, ..., 28, 29}
+  - The frames place of the time after the start of the full-length recording when the 1-minute excerpt was cropped (assuming a frame rate of 30 frames per second).
+  - For example, if the 1-minute excerpt was cropped 14 minutes and 12.0 seconds after the start of the full-length recording, the value here would be 0.
+- `insitu_spl_full_L` : floating point numbers
+  - Exponentially averaged A-weighted sound pressure level (in decibels) over time at the left channel of the B&K Type 4101-B binaural microphone, computed with fast averaging (i.e. with time constant of 125 milliseconds), and then averaged across the entire full-length recording.
+  - Filter is designed according to ISO1996-1. This is as recommended in Table D.1 of ISO 12913-3:2019 for soundscape studies.
+- `insitu_spl_full_R` : floating point numbers
+  - Exponentially averaged A-weighted sound pressure level (in decibels) over time at the right channel of the B&K Type 4101-B binaural microphone, computed with fast averaging (i.e. with time constant of 125 milliseconds), and then averaged across the entire full-length recording.
+  - Filter is designed according to ISO1996-1. This is as recommended in Table D.1 of ISO 12913-3:2019 for soundscape studies.
+- `insitu_spl_full_LR_eavg` : floating point numbers
+  - The energetic average of the values in `insitu_spl_full_L` and `insitu_spl_full_R`.
+  - The energetic average of $x$ and $y$ is defined as $10\lg\left(10^{\frac{x}{10}} + 10^{\frac{y}{10}}\right) - 10\lg(2)$.
+- `insitu_spl_full_GRAS146AE` : floating point numbers
+  - Exponentially averaged A-weighted sound pressure level (in decibels) over time at the GRAS 146AE Free-field Microphone, computed with fast averaging (i.e. with time constant of 125 milliseconds), and then averaged across the entire full-length recording.
+  - Filter is designed according to ISO1996-1. This is as recommended in Table D.1 of ISO 12913-3:2019 for soundscape studies.
+- `insitu_spl_1min_L` : floating point numbers
+  - Exponentially averaged A-weighted sound pressure level (in decibels) over time at the left channel of the B&K Type 4101-B binaural microphone, computed with fast averaging (i.e. with time constant of 125 milliseconds), and then averaged across the 1-minute excerpt of the recording.
+  - Filter is designed according to ISO1996-1. This is as recommended in Table D.1 of ISO 12913-3:2019 for soundscape studies.
+- `insitu_spl_1min_R` : floating point numbers
+  - Exponentially averaged A-weighted sound pressure level (in decibels) over time at the right channel of the B&K Type 4101-B binaural microphone, computed with fast averaging (i.e. with time constant of 125 milliseconds), and then averaged across the 1-minute excerpt of the recording.
+  - Filter is designed according to ISO1996-1. This is as recommended in Table D.1 of ISO 12913-3:2019 for soundscape studies.
+- `insitu_spl_1min_LR_eavg` : floating point numbers
+  - The energetic average of the values in `insitu_spl_1min_L` and `insitu_spl_1min_R`.
+  - The energetic average of $x$ and $y$ is defined as $10\lg\left(10^{\frac{x}{10}} + 10^{\frac{y}{10}}\right) - 10\lg(2)$.
+- `insitu_spl_1min_GRAS146AE` : floating point numbers
+  - Exponentially averaged A-weighted sound pressure level (in decibels) over time at the GRAS 146AE Free-field Microphone, computed with fast averaging (i.e. with time constant of 125 milliseconds), and then averaged across the 1-minute excerpt of the recording.
+  - Filter is designed according to ISO1996-1. This is as recommended in Table D.1 of ISO 12913-3:2019 for soundscape studies.
+- `gain_at_insitu_spl_LR` : floating point numbers
+  - Gain to apply to the 2-channel wave file recorded using the binaural microphone, in order to achieve an L<sub>A,eq</sub> of `insitu_spl_full_LR_eavg` decibels when played back over a pair of Beyerdynamic Custom One Pro headphones, powered by a Creative SoundBlaster E5 soundcard (set at volume 40).
+- `gain_at_insitu_spl_GRAS146E` : floating point numbers
+  - Gain to apply to the 2-channel wave file recorded using the binaural microphone, in order to achieve an L<sub>A,eq</sub> of `insitu_spl_full_GRAS146AE` decibels when played back over a pair of Beyerdynamic Custom One Pro headphones, powered by a Creative SoundBlaster E5 soundcard (set at volume 40).
+- `link_full_youtube` : strings
+  - The YouTube link to the full-length recording from the Insta360 One R camera.
+  - These are 360-degree videos in spherical format corresponding to the files `S####_full_Insta360.mp4`.
+- `link_full_insta360` : strings
+  - The link to download the full-length recording from the Insta360 One R camera, as stored on our institutional repository DR-NTU (Data).
+  - These are 360-degree videos in spherical format corresponding to the files `S####_full_Insta360.mp4`.
+  - May be `NIL` if the full-length recording is unavailable on DR-NTU (Data).
+- `link_full_sqobold_all` : strings
+  - The link to download the 3-channel HDF file containing the full-length recordings from both the B&K Type 4101-B binaural microphone and GRAS 146AE Free-field Microphone, as stored on our institutional repository DR-NTU (Data).
+  - These correspond to the files `S####_full_SQobold_all.hdf`.
+  - Note that "HDF" here refers to "HEAD Data Format", and not the more common "Hierarchical Data Format". Software such as <a href="https://www.head-acoustics.com/products/analysis-software/head-companion">HEAD Companion</a> and <a href="https://www.head-acoustics.com/products/analysis-software/artemis-suite">ArtemiS</a> may be used to open this file.
+- `link_full_sqobold_bin` : strings
+  - The link to download the 2-channel WAV file recorded using the B&K Type 4101-B binaural microphone, as generated from the first two channels of the HDF file at `link_full_sqobold_all` and stored on our institutional repository DR-NTU (Data).
+  - These correspond to the files `S####_full_SQobold_bin.wav`.
+- `link_full_sqobold_spl` : strings
+  - The link to download the 1-channel WAV file recorded using the GRAS 146AE Free-field Microphone, as generated from the last channel of the HDF file at `link_full_sqobold_all` and stored on our institutional repository DR-NTU (Data).
+  - These correspond to the files `S####_full_SQobold_spl.wav`.
+- `link_full_zylia_19ch_part01` : strings
+  - The link to download the first part of the 19-channel WAV file containing the full-length recording from the ZYLIA ZM-1 3rd-order Ambisonic microphone, as stored on our institutional repository DR-NTU (Data).
+  - These correspond to the files `S####_full_Zylia_19ch_part01.wav`.
+  - Some ZYLIA recordings were split into two parts due to <a href="https://en.wikipedia.org/w/index.php?title=WAV&oldid=1151202855#Limitations">file size limitations with the WAV format</a>.
+  - May be `NIL` if the full-length recording is unavailable on DR-NTU (Data).
+- `link_full_zylia_19ch_part02` : strings
+  - The link to download the second part of the 19-channel WAV file containing the full-length recording from the ZYLIA ZM-1 3rd-order Ambisonic microphone, as stored on our institutional repository DR-NTU (Data).
+  - These corespond to the files `S####_full_Zylia_19ch_part02.wav`.
+  - Some ZYLIA recordings were split into two parts due to <a href="https://en.wikipedia.org/w/index.php?title=WAV&oldid=1151202855#Limitations">file size limitations with the WAV format</a>.
+  - May be `NIL` if the full-length recording is unavailable on DR-NTU (Data), or if there is no second part.
+- `link_full_zylia_02ch` : strings
+  - The link to download the 2-channel stereo WAV file generated from the 19-channel WAV file at `link_full_zylia_19ch_part01` (and `link_full_zylia_19ch_part02` if a second part exists) by the ZYLIA ZR-1 Portable Recorder.
+  - These correspond to the files `S####_full_Zylia_02ch.wav`.
+- `link_1min_youtube` : strings
+  - The YouTube link to the 1-minute excerpt of the full-length recording from the Insta360 One R camera.
+  - These are 360-degree videos in spherical format corresponding to the files `S####_1min_Insta360.mp4`. 
+- `link_1min_insta360` : strings
+  - The link to download the 1-minute excerpt of the full-length recording from the Insta360 One R camera, as stored on our institutional repository DR-NTU (Data).
+  - These are 360-degree videos in spherical format corresponding to the files `S####_1min_Insta360.mp4`.
+- `link_1min_sqobold_all` : strings
+  - The link to download the 3-channel HDF file containing the 1-minute excerpt of the full-length recordings from both the B&K Type 4101-B binaural microphone and GRAS 146AE Free-field Microphone, as stored on our institutional repository DR-NTU (Data).
+  - These correspond to the files `S####_1min_SQobold_all.hdf`.
+  - Note that "HDF" here refers to "HEAD Data Format", and not the more common "Hierarchical Data Format". Software such as <a href="https://www.head-acoustics.com/products/analysis-software/head-companion">HEAD Companion</a> and <a href="https://www.head-acoustics.com/products/analysis-software/artemis-suite">ArtemiS</a> may be used to open this file.
+- `link_1min_sqobold_bin` : strings
+  - The link to download the 2-channel WAV file recorded using the B&K Type 4101-B binaural microphone, as generated from the first two channels of the HDF file at `link_1min_sqobold_all` and stored on our institutional repository DR-NTU (Data).
+  - These correspond to the files `S####_1min_SQobold_bin.wav`.
+- `link_1min_sqobold_spl` : strings
+  - The link to download the 1-channel WAV file recorded using the GRAS 146AE Free-field Microphone, as generated from the last channel of the HDF file at `link_1min_sqobold_all` and stored on our institutional repository DR-NTU (Data).
+  - These correspond to the files `S####_1min_SQobold_spl.wav`.
+- `link_1min_zylia_19ch` : strings
+  - The link to download the 19-channel WAV file containing the 1-minute excerpt of the full-length recording from the ZYLIA ZM-1 3rd-order Ambisonic microphone, as stored on our institutional repository DR-NTU (Data).
+  - These correspond to the files `S####_1min_Zylia_19ch.wav`.
+  - Note that for Bishan Harmony Park (S0054), the ZYLIA recordings cut off earlier than the SQobold recordings so there is no corresponding ZYLIA track for the 1-min excerpt of S0054. For now, we use as a placeholder a 19-channel repeat of the SQobold SPL track for the Zylia ambisonic track (i.e., `S0054_1min_Zylia_19ch.wav` contains the data in `S0054_1min_SQobold_spl.wav` replicated over 19 channels).
+- `link_1min_zylia_02ch` : strings
+  - The link to download the 2-channel stereo WAV file generated from the 19-channel WAV file at `link_1min_zylia_19ch` by the ZYLIA ZR-1 Portable Recorder.
+  - These correspond to the files `S####_1min_Zylia_02ch.wav`.
+  - Note that for Bishan Harmony Park (S0054), the ZYLIA recordings cut off earlier than the SQobold recordings so there is no corresponding ZYLIA track for the 1-min excerpt of S0054. For now, we use as a placeholder the SQobold binaural track for the Zylia stereo track (i.e., `S0054_1min_Zylia_02ch.wav` and `S0054_1min_SQobold_bin.wav` contain the same data).
 
-## Admin page(s)
+## `predictions.csv`
 
-Currently, we have not set up an admin page for the application that the code in this repository builds, but the configuration in `.\visualisation\urls.py` is as follows:
+- `lcs_id` : unique strings
+  - The ID of the soundscape in the LCS dataset. Each ID corresponds to a unique soundscape.
+- `start_idxs` : integers
+  - The time (in seconds) of the start of the 30-second window of the binaural recording of the soundscape (made at the recording location) used as input to the ensemble model pre-trained on the <a href="https://doi.org/10.1109/TAFFC.2023.3247914">ARAUS dataset</a> (preprint available <a href="https://arxiv.org/abs/2207.01078">on arXiv</a>).
+- `isopl_mean` :
+  - The mean of the predictions of the ensembled models for ISO Pleasantness (as defined in <a href="https://www.iso.org/standard/69864.html">ISO 12913</a>) for the 30-second window starting at `start_idxs` seconds.
+- `isoev_mean` :
+  - The mean of the predictions of the ensembled models for ISO Eventfulness (as defined in <a href="https://www.iso.org/standard/69864.html">ISO 12913</a>) for the 30-second window starting at `start_idxs` seconds.
 
-  ```JavaScript
-  019 urlpatterns = [
-  020     path('admin/', admin.site.urls),
-  021     path('', include('lioncitysoundscapes.urls'))
-  022 ]
-  ```
-  
-The `lioncitysoundscapes.urls` part on Line 21 indicates that `urls.py` will access `.\lioncitysoundscapes\urls.py` to load the related application URLs (following standard Python module naming conventions). Similarly, the `admin.site.urls` part on Line 20 indicates that `.\admin\site\urls.py` will be accessed to load the admin pages for the application if any (which do not exist yet, but you may add them in if you want).
+# Recording procedure
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+For every location where the soundscape was recorded, we followed a similar procedure:
 
-<!-- END OF DOCUMENT -->
+1. Press the buttons to start recording for the Insta360 camera, ZYLIA ambisonic microphone, and SQobold data acquisition system (order may be different for each recording).
+2. Make a synchronisation clap that it is visible from the Insta360 camera and audible from all microphones (this is used to synchronise all recordings in the post-processing phase).
+3. Walk away from the recording setup, such that we are not visible in the Insta360 video recording, for the duration of the full-length recording.
+4. Return to the recording setup and make a second synchronisation clap that is visible from the Insta360 camera and audible from all microphones (this marks the end of the recording).
+5. Press the buttons to stop recording for the Insta360 camera, ZYLIA ambisonic microphone, and SQobold data acquisition system (order may be different for each recording).
+
+In the form of a timeline, let us define the following values, in units of minutes:
+
+- $\alpha$ : Time when Insta360 recording was started
+- $\beta$ : Time when SQobold recording (for both B&K Type 4101-B and GRAS 146AE microphones) was started
+- $\gamma$ : Time when Zylia recording was started
+- $\delta$ : Time when synchronisation clap was performed
+- $\delta^+$ : Time when we (researchers) are fully out of frame in Insta360 recording
+- $\varepsilon$ : Time when the 1-minute excerpt of the soundscape starts
+- $\zeta$ : Time when the 1-minute excerpt of the soundscape ends
+- $\eta$ : Time when the Zylia recording first desynchronises from the SQobold and Insta360 recordings
+- $\theta$ : Time when we (researchers) become visible in Insta360 recording
+- $\kappa$ : Time when Zylia recording was stopped
+- $\lambda$ : Time when Insta360 recording was stopped
+- $\mu$ : Time when SQobold recording was stopped
+
+Then, we have something like this:
+	   
+             │<------ insta360_offset ------->│<------------ usable_length_bin ------------->│
+             │                                │                                              │
+    Insta360 ├█████████████████████████████████████████████████████████████████████████████████████████████┤
+             │            │<-- zylia_offset-->│<---------- usable_length_all ---------->│    │             │
+             │            │                   │                                         │    │             │
+    ZYLIA    │            ├█████████████████████████████████████████████████████████████████████████┤      │
+             │      │<---- sqobold_offset --->│<-- onemin_offset_bin -->│<-- 1 -->│     │    │      │      │
+             │      │     │                   │                         │         │     │    │      │      │
+    SQobold  │      ├██████████████████████████████████████████████████████████████████████████████████████████████┤
+             │      │     │         │         │                         │         │     │    │      │      │       │
+             alpha  beta  gamma     delta     delta+                    epsilon   zeta  eta  theta  kappa  lambda  mu
+		 
+│─┌┐└┘┬┴┤├┼
+
+# Acknowledgements
+
+We would like to express our heartfelt gratitude to the management teams at the following locations for their assistance with this project:
+
+- Changi Airport (S0011, S0012)
+- National Parks Board, Bukit Timah Nature Reserve (S0055)
+- National Parks Board, Jurong Lake Gardens (S0056)
+- National Parks Board, Singapore Botanic Gardens (S0029)
+- National Parks Board, Sungei Buloh Wetland Reserve (S0018, S0019)
+- Raffles Marina (S0032, S0033)
+- Singapore Zoo (S0041)
+
+# Terms of use
+
+All data in this dataset, including code, metadata, and audio-visual recordings, are licensed under the Creative Commons Attribution-NonCommercial-ShareAlike license. You may view the license terms at https://creativecommons.org/licenses/by-nc-sa/4.0/. By accessing, viewing, or downloading any data in this dataset, in full or in part, it is assumed that you have read and agreed to the license terms.
+
+*THIS DATASET IS FOR NONCOMMERCIAL USE BY ACADEMIC OR NON-PROFIT ORGANIZATIONS ONLY. COMMERCIAL USAGE OF THIS DATASET, IN FULL OR IN PART, IS STRICTLY PROHIBITED.*
+
+# Version history
+
+- 0.0.0 : Initial release
