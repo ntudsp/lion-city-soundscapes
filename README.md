@@ -13,7 +13,7 @@ The LCS dataset contains audio-visual recordings made at the 62 locations identi
 - 1-channel WAV file recorded using the GRAS 146AE Free-field Microphone, as generated from the last channel of the HDF file
 - 360-degree video file (in spherical format) recorded using an Insta360 One R camera and onboard microphone
 
-Further information on the audio and video files in the dataset itself is available at <a href="https://doi.org/10.21979/N9/AVHSBX">https://doi.org/10.21979/N9/AVHSBX</a>.
+Further information on the audio and video files in the dataset itself is available at <a href="https://doi.org/10.21979/N9/AVHSBX">https://doi.org/10.21979/N9/AVHSBX</a>. For the visualisation code, please refer to <a href="https://github.com/ntudsp/lion-city-soundscapes-visualisation">https://github.com/ntudsp/lion-city-soundscapes-visualisation</a>
 
 # Getting started
 
