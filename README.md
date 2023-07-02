@@ -2,7 +2,7 @@
 
 This repository stores code to download the files in the Lion City Soundscapes (LCS) dataset available at <a href="https://doi.org/10.21979/N9/AVHSBX">https://doi.org/10.21979/N9/AVHSBX</a>, as well as replication code for the following publication related to the dataset:
 
-> Kenneth Ooi, Hao-Weng Lin, Jessie Goh, Zhen-Ting Ong, Trevor Wong, Karn Watcharasupat, Bhan Lam, Woon-Seng Gan, "Lion City Soundscapes (LCS): Recording and Validation of Characteristic Soundscapes of Singapore", in _29th International Congress on Sound and Vibration, ICSV 2023_, Prague, Czech Republic.
+> Kenneth Ooi, Hao-Weng Lin, Jessie Goh, Zhen-Ting Ong, Trevor Wong, Karn Watcharasupat, Bhan Lam, Woon-Seng Gan, "Lion City Soundscapes (LCS): Recording and Validation of Characteristic Soundscapes of Singapore", in _49th IEEE International Conference on Acoustics, Speech, and Signal Processing, ICASSP 2023_, Seoul, South Korea [to be submitted].
 
 The LCS dataset contains audio-visual recordings made at the 62 locations identified by the <a href="https://doi.org/10.3390/su14127485">Singapore Soundscape Site Selection Survey</a>, where each soundscape is given an ID in the form `S####`, where `####` ranges from `0001` to `0062`. The set of audio-visual recordings for each location comprises the following, as both "full-length" recordings (ranging from 9-38 minutes in length) and 1-minute excerpts of the "full-length" recordings:
 
